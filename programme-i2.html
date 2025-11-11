@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برنامج غذائي iPhone Friendly</title>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f0f4f7;
+            direction: rtl;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background: #4caf50;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.5em;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 10px;
+        }
+        
+        .day-card {
+            background: #fff;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        .day-header {
+            background: #81C784;
+            color: #fff;
+            padding: 15px;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .meals {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 15px;
+        }
+        
+        .meal {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .meal:last-child {
+            border-bottom: none;
+        }
+        
+        .meal-title {
+            font-weight: 700;
+            color: #388e3c;
+        }
+        
+        @media(max-width:600px) {
+            .day-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>برنامج غذائي + تمارين للشهر</header>
+    <div class="container" id="month-container"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+            const monthPlan = [];
+            // مثال 7 أيام، يمكن تكراره 30 يوم لاحقًا
+            for (let i = 1; i <= 7; i++) {
+                monthPlan.push({
+                    day: `اليوم ${i}`,
+                    meals: [{
+                        title: "الإفطار",
+                        items: "شوفان 50 ج + حليب 250 مل + موز 1 + بيض 2"
+                    }, {
+                        title: "وجبة خفيفة",
+                        items: "زبادي 200 ج + مكسرات 20 ج"
+                    }, {
+                        title: "الغداء",
+                        items: "دجاج 150 ج + أرز 150 ج + خضار"
+                    }, {
+                        title: "العشاء",
+                        items: "سردين 100 ج + بطاطا حلوة 150 ج"
+                    }],
+                    exercise: "تمارين 30 دقيقة حسب اليوم"
+                });
+            }
+
+            const container = document.getElementById('month-container');
+
+            monthPlan.forEach(dayPlan => {
+                const dayCard = document.createElement('div');
+                dayCard.classList.add('day-card');
+                const header = document.createElement('div');
+                header.classList.add('day-header');
+                header.innerHTML = `${dayPlan.day} <span>${dayPlan.exercise}</span>`;
+                dayCard.appendChild(header);
+
+                const mealsDiv = document.createElement('div');
+                mealsDiv.classList.add('meals');
+
+                dayPlan.meals.forEach(meal => {
+                    const mealDiv = document.createElement('div');
+                    mealDiv.classList.add('meal');
+                    mealDiv.innerHTML = `<div class="meal-title">${meal.title}</div><div>${meal.items}</div>`;
+                    mealsDiv.appendChild(mealDiv);
+                });
+
+                dayCard.appendChild(mealsDiv);
+                container.appendChild(dayCard);
+
+                header.addEventListener('click', () => {
+                    // استخدام setTimeout لضمان قراءة scrollHeight على iPhone
+                    if (mealsDiv.style.maxHeight && mealsDiv.style.maxHeight !== "0px") {
+                        mealsDiv.style.maxHeight = "0";
+                        mealsDiv.style.padding = "0 15px";
+                    } else {
+                        setTimeout(() => {
+                            mealsDiv.style.maxHeight = mealsDiv.scrollHeight + "px";
+                            mealsDiv.style.padding = "10px 15px";
+                        }, 10);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
