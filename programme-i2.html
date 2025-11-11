@@ -4,147 +4,642 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>برنامج غذائي iPhone Friendly</title>
+    <title>برنامجك الصحي - 30 يوم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: #f0f4f7;
-            direction: rtl;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            direction: rtl;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* Animated Background */
+        
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        }
+        
+        .background-animation::before,
+        .background-animation::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .background-animation::before {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            top: -250px;
+            right: -250px;
+            animation-delay: 0s;
+        }
+        
+        .background-animation::after {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #6366f1, #818cf8);
+            bottom: -200px;
+            left: -200px;
+            animation-delay: 7s;
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(100px, -100px) scale(1.1);
+            }
+            66% {
+                transform: translate(-100px, 100px) scale(0.9);
+            }
+        }
+        /* Header */
         
         header {
-            background: #4caf50;
-            color: #fff;
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(99, 102, 241, 0.1));
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: clamp(30px, 5vw, 50px) 20px;
             text-align: center;
-            padding: 20px;
-            font-size: 1.5em;
         }
+        
+        .header-content h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #10b981, #34d399, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+        }
+        
+        .header-content p {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        /* Stats Bar */
+        
+        .stats-bar {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: clamp(15px, 3vw, 30px);
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: #10b981;
+            transform: translateY(-5px);
+        }
+        
+        .stat-item .number {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 900;
+            color: #10b981;
+            display: block;
+        }
+        
+        .stat-item .label {
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+        /* Container */
         
         .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 10px;
+            position: relative;
+            z-index: 5;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: clamp(20px, 4vw, 40px) clamp(15px, 3vw, 30px);
         }
+        /* Week Sections */
+        
+        .week-section {
+            margin-bottom: 40px;
+        }
+        
+        .week-header {
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .week-header::before {
+            content: '';
+            width: 50px;
+            height: 4px;
+            background: linear-gradient(to left, #10b981, transparent);
+            border-radius: 10px;
+        }
+        /* Days Grid */
+        
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+            gap: clamp(20px, 3vw, 30px);
+        }
+        /* Day Card - Compact Design */
         
         .day-card {
-            background: #fff;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
             overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
         
-        .day-header {
-            background: #81C784;
-            color: #fff;
-            padding: 15px;
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #6366f1, #10b981);
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+        
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 200% 0%;
+            }
+        }
+        
+        .day-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #10b981;
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
+        }
+        
+        .day-card-header {
+            padding: 20px;
             cursor: pointer;
-            font-weight: 700;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
         }
         
-        .meals {
+        .day-number {
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            font-weight: 700;
+            color: #10b981;
+        }
+        
+        .exercise-badge {
+            font-size: clamp(0.75rem, 1.8vw, 0.9rem);
+            padding: 8px 15px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            color: #34d399;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+        
+        .day-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.4s ease;
-            padding: 0 15px;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .meal {
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
+        .day-content-inner {
+            padding: 0 20px 20px 20px;
+        }
+        /* Tabs */
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .meal:last-child {
-            border-bottom: none;
+        .tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: #64748b;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+            font-family: 'Tajawal', sans-serif;
         }
         
-        .meal-title {
+        .tab:hover {
+            color: #10b981;
+        }
+        
+        .tab.active {
+            color: #10b981;
+            border-bottom-color: #10b981;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        /* Meal Item */
+        
+        .meal-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-right: 3px solid #10b981;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+        
+        .meal-item:hover {
+            background: rgba(16, 185, 129, 0.05);
+            transform: translateX(-5px);
+        }
+        
+        .meal-name {
+            font-size: clamp(1rem, 2.2vw, 1.1rem);
             font-weight: 700;
-            color: #388e3c;
+            color: #10b981;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        @media(max-width:600px) {
-            .day-header {
-                flex-direction: column;
-                align-items: flex-start;
+        .meal-details {
+            font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .macros {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .macro {
+            font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+            padding: 5px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            color: #818cf8;
+            font-weight: 600;
+        }
+        /* Exercise Content */
+        
+        .exercise-content {
+            background: rgba(239, 68, 68, 0.05);
+            border-right: 3px solid #ef4444;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .exercise-content h4 {
+            font-size: clamp(1rem, 2.2vw, 1.1rem);
+            color: #f87171;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .exercise-content p {
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            color: #cbd5e1;
+            line-height: 1.7;
+        }
+        /* Responsive */
+        
+        @media(max-width: 768px) {
+            .days-grid {
+                grid-template-columns: 1fr;
             }
+            .exercise-badge {
+                max-width: 150px;
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+            .day-card-header {
+                flex-wrap: wrap;
+            }
+        }
+        
+        @media(max-width: 480px) {
+            .stats-bar {
+                gap: 10px;
+            }
+            .stat-item {
+                padding: 12px 20px;
+                flex: 1 1 calc(50% - 10px);
+            }
+            .tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .tab {
+                white-space: nowrap;
+                padding: 10px 15px;
+            }
+        }
+        /* Custom Scrollbar */
+        
+         ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #10b981, #6366f1);
+            border-radius: 10px;
+        }
+        
+         ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #059669, #4f46e5);
         }
     </style>
 </head>
 
 <body>
+    <div class="background-animation"></div>
 
-    <header>برنامج غذائي + تمارين للشهر</header>
-    <div class="container" id="month-container"></div>
+    <header>
+        <div class="header-content">
+            <h1>💪 برنامجك الصحي الشامل</h1>
+            <p>رحلة 30 يوم نحو حياة أفضل</p>
+        </div>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="number">30</span>
+            <span class="label">يوم</span>
+        </div>
+        <div class="stat-item">
+            <span class="number">150</span>
+            <span class="label">وجبة</span>
+        </div>
+        <div class="stat-item">
+            <span class="number">25</span>
+            <span class="label">تمرين</span>
+        </div>
+        <div class="stat-item">
+            <span class="number">100%</span>
+            <span class="label">نجاح</span>
+        </div>
+    </div>
+
+    <div class="container" id="program-container"></div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        // Data
+        const monthPlan = [];
+        for (let i = 1; i <= 30; i++) {
+            let exerciseDetail = {};
+            if (i % 7 === 0) exerciseDetail = {
+                title: "راحة / نشاط خفيف",
+                details: "مشية 30 دقيقة أو يوغا خفيفة للاسترخاء والتعافي"
+            };
+            else if (i % 7 === 1 || i % 7 === 4) exerciseDetail = {
+                title: "صدر + كتف + بطن",
+                details: "تمارين ضغط 3 مجموعات × 12 تكرار | رفع أثقال 3×10 | تمرين بطن 3×15"
+            };
+            else if (i % 7 === 2 || i % 7 === 5) exerciseDetail = {
+                title: "أرجل + قرفصاء + تمدد",
+                details: "سكوات 3×12 | لنجز 3×12 على كل رجل | تمدد عضلي 10 دقائق"
+            };
+            else exerciseDetail = {
+                title: "ظهر + ذراعين + بطن",
+                details: "سحب خلفي 3×12 | تمارين باي وتراي 3×12 | تمرين بطن 3×15"
+            };
 
-            const monthPlan = [];
-            // مثال 7 أيام، يمكن تكراره 30 يوم لاحقًا
-            for (let i = 1; i <= 7; i++) {
-                monthPlan.push({
-                    day: `اليوم ${i}`,
-                    meals: [{
-                        title: "الإفطار",
-                        items: "شوفان 50 ج + حليب 250 مل + موز 1 + بيض 2"
-                    }, {
-                        title: "وجبة خفيفة",
-                        items: "زبادي 200 ج + مكسرات 20 ج"
-                    }, {
-                        title: "الغداء",
-                        items: "دجاج 150 ج + أرز 150 ج + خضار"
-                    }, {
-                        title: "العشاء",
-                        items: "سردين 100 ج + بطاطا حلوة 150 ج"
-                    }],
-                    exercise: "تمارين 30 دقيقة حسب اليوم"
-                });
-            }
+            monthPlan.push({
+                day: i,
+                meals: [{
+                    title: "الإفطار",
+                    items: "شوفان 50 ج + حليب 250 مل + موز 1 حبة + بيض مسلوق 2 حبة",
+                    protein: "20 ج",
+                    carbs: "60 ج",
+                    fat: "10 ج"
+                }, {
+                    title: "وجبة خفيفة صباحية",
+                    items: "زبادي يوناني 200 ج + مكسرات متنوعة 20 ج",
+                    protein: "10 ج",
+                    carbs: "15 ج",
+                    fat: "8 ج"
+                }, {
+                    title: "الغداء",
+                    items: "دجاج مشوي 150 ج + أرز بني 150 ج + خضار مشكلة",
+                    protein: "35 ج",
+                    carbs: "55 ج",
+                    fat: "10 ج"
+                }, {
+                    title: "وجبة خفيفة بعد الغداء",
+                    items: "تفاح أخضر 1 حبة + لوز 20 ج",
+                    protein: "5 ج",
+                    carbs: "25 ج",
+                    fat: "5 ج"
+                }, {
+                    title: "العشاء",
+                    items: "سردين معلب 100 ج + بطاطا حلوة مشوية 150 ج + سلطة خضراء",
+                    protein: "25 ج",
+                    carbs: "45 ج",
+                    fat: "12 ج"
+                }],
+                exercise: exerciseDetail
+            });
+        }
 
-            const container = document.getElementById('month-container');
+        // Organize by weeks
+        const weeks = [];
+        for (let i = 0; i < 30; i += 7) {
+            weeks.push({
+                weekNum: Math.floor(i / 7) + 1,
+                days: monthPlan.slice(i, i + 7)
+            });
+        }
 
-            monthPlan.forEach(dayPlan => {
+        const container = document.getElementById('program-container');
+
+        weeks.forEach(week => {
+            const weekSection = document.createElement('div');
+            weekSection.classList.add('week-section');
+
+            const weekHeader = document.createElement('div');
+            weekHeader.classList.add('week-header');
+            weekHeader.textContent = `الأسبوع ${week.weekNum}`;
+            weekSection.appendChild(weekHeader);
+
+            const daysGrid = document.createElement('div');
+            daysGrid.classList.add('days-grid');
+
+            week.days.forEach(dayPlan => {
                 const dayCard = document.createElement('div');
                 dayCard.classList.add('day-card');
-                const header = document.createElement('div');
-                header.classList.add('day-header');
-                header.innerHTML = `${dayPlan.day} <span>${dayPlan.exercise}</span>`;
-                dayCard.appendChild(header);
 
-                const mealsDiv = document.createElement('div');
-                mealsDiv.classList.add('meals');
+                // Header
+                const cardHeader = document.createElement('div');
+                cardHeader.classList.add('day-card-header');
+                cardHeader.innerHTML = `
+                    <div class="day-number">اليوم ${dayPlan.day}</div>
+                    <div class="exercise-badge">${dayPlan.exercise.title}</div>
+                `;
+
+                // Content
+                const dayContent = document.createElement('div');
+                dayContent.classList.add('day-content');
+
+                const contentInner = document.createElement('div');
+                contentInner.classList.add('day-content-inner');
+
+                // Tabs
+                const tabs = document.createElement('div');
+                tabs.classList.add('tabs');
+                tabs.innerHTML = `
+                    <button class="tab active" data-tab="meals">الوجبات</button>
+                    <button class="tab" data-tab="exercise">التمرين</button>
+                `;
+
+                // Meals Tab
+                const mealsTab = document.createElement('div');
+                mealsTab.classList.add('tab-content', 'active');
+                mealsTab.setAttribute('data-content', 'meals');
 
                 dayPlan.meals.forEach(meal => {
-                    const mealDiv = document.createElement('div');
-                    mealDiv.classList.add('meal');
-                    mealDiv.innerHTML = `<div class="meal-title">${meal.title}</div><div>${meal.items}</div>`;
-                    mealsDiv.appendChild(mealDiv);
+                    const mealItem = document.createElement('div');
+                    mealItem.classList.add('meal-item');
+                    mealItem.innerHTML = `
+                        <div class="meal-name">🍴 ${meal.title}</div>
+                        <div class="meal-details">${meal.items}</div>
+                      
+                    `;
+                    mealsTab.appendChild(mealItem);
                 });
 
-                dayCard.appendChild(mealsDiv);
-                container.appendChild(dayCard);
+                // Exercise Tab
+                const exerciseTab = document.createElement('div');
+                exerciseTab.classList.add('tab-content');
+                exerciseTab.setAttribute('data-content', 'exercise');
+                exerciseTab.innerHTML = `
+                    <div class="exercise-content">
+                        <h4>💪 ${dayPlan.exercise.title}</h4>
+                        <p>${dayPlan.exercise.details}</p>
+                    </div>
+                `;
 
-                header.addEventListener('click', () => {
-                    // استخدام setTimeout لضمان قراءة scrollHeight على iPhone
-                    if (mealsDiv.style.maxHeight && mealsDiv.style.maxHeight !== "0px") {
-                        mealsDiv.style.maxHeight = "0";
-                        mealsDiv.style.padding = "0 15px";
+                contentInner.appendChild(tabs);
+                contentInner.appendChild(mealsTab);
+                contentInner.appendChild(exerciseTab);
+                dayContent.appendChild(contentInner);
+
+                dayCard.appendChild(cardHeader);
+                dayCard.appendChild(dayContent);
+                daysGrid.appendChild(dayCard);
+
+                // Toggle functionality
+                cardHeader.addEventListener('click', () => {
+                    const isOpen = dayContent.style.maxHeight && dayContent.style.maxHeight !== '0px';
+                    if (isOpen) {
+                        dayContent.style.maxHeight = '0';
                     } else {
-                        setTimeout(() => {
-                            mealsDiv.style.maxHeight = mealsDiv.scrollHeight + "px";
-                            mealsDiv.style.padding = "10px 15px";
-                        }, 10);
+                        dayContent.style.maxHeight = dayContent.scrollHeight + 'px';
                     }
                 });
+
+                // Tab switching
+                const tabButtons = tabs.querySelectorAll('.tab');
+                tabButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const targetTab = btn.getAttribute('data-tab');
+
+                        tabButtons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+
+                        const tabContents = contentInner.querySelectorAll('.tab-content');
+                        tabContents.forEach(tc => {
+                            if (tc.getAttribute('data-content') === targetTab) {
+                                tc.classList.add('active');
+                            } else {
+                                tc.classList.remove('active');
+                            }
+                        });
+
+                        // Recalculate height
+                        setTimeout(() => {
+                            dayContent.style.maxHeight = dayContent.scrollHeight + 'px';
+                        }, 10);
+                    });
+                });
             });
+
+            weekSection.appendChild(daysGrid);
+            container.appendChild(weekSection);
         });
     </script>
+
 </body>
 
 </html>
